@@ -1,0 +1,31 @@
+{% extends "layout.html" %} 
+{% block body %}
+<div class="jumbotron jumbotron-fluid bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="display-4 text-center">Quiz 3</h1>
+                <p class="lead text-center">Image Processing</p>
+                <form id="uploadForm" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile04" accept="image/*" aria-describedby="inputGroupFileAddon04" name="file" onchange="updateFileName(this)">
+                            <label class="custom-file-label" for="inputGroupFile04" id="fileLabel">Pilih file...</label>
+                        </div>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit" id="inputGroupFileAddon04">Upload</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateFileName(input) {
+        var fileName = input.files[0].name;
+        document.getElementById("fileLabel").innerHTML = fileName;
+    }
+</script>
+{% endblock %}

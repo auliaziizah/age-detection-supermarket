@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <link rel="icon" href="https://cdn.pixabay.com/photo/2021/03/23/09/01/webcam-6116845_1280.png" type="image/x-icon">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="static/css/style.css">
+
+    <title>Market</title>
+    <style>
+        html {
+            background: #100a1c;
+            background-image: radial-gradient(50% 30% ellipse at center top, #201e40 0%, rgba(0, 0, 0, 0) 100%),
+                radial-gradient(60% 50% ellipse at center bottom, #261226 0%, #100a1c 100%);
+            background-attachment: fixed;
+            color: #6cacc5;
+        }
+
+        .item {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px;
+            border: 2px solid #6cacc5;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .cart {
+            margin: 20px;
+            padding: 10px;
+            border: 2px solid #6cacc5;
+            border-radius: 4px;
+        }
+
+        button {
+            border: 0;
+            background: rgba(42, 50, 113, .28);
+            color: #6cacc5;
+            cursor: pointer;
+            font: inherit;
+            margin: 0.25em;
+            transition: all 0.5s;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background: #201e40;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        #age-checker{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            padding: 20px;
+            margin-left: 30px;
+            max-width: fit-content;
+            border: 2px solid #6cacc5;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href="/"><button>Home</button></a>
+        <h2>Market</h2>
+    </div>
+
+    <div id="age-checker" style="display:none;">
+        <h3>Silakan Verifikasi Usia Anda</h3>
+        <img src="{{ url_for('video_feed') }}"><br>
+        <button onclick="confirmAge()">Konfirmasi Pembelian</button>
+        <button onclick="reject()">Tolak Pembelian</button>
+    </div>
+
+    <div class="container">
+        <div class="item">
+            <h3>Susu</h3>
+            <p>Rp 5000</p>
+            <button onclick="addToCart('Susu', 5000)">Tambahkan ke Keranjang</button>
+        </div>
+        <div class="item">
+            <h3>Roti</h3>
+            <p>Rp 3000</p>
+            <button onclick="addToCart('Roti', 3000)">Tambahkan ke Keranjang</button>
+        </div>
+        <div class="item">
+            <h3>Rokok</h3>
+            <p>Rp 30000</p>
+            <button onclick="checkAge('Rokok')">Tambahkan ke Keranjang</button>
+        </div>
+        <div class="item">
+            <h3>Alkohol</h3>
+            <p>Rp 70000</p>
+            <button onclick="checkAge('Alkohol')">Tambahkan ke Keranjang</button>
+        </div>
+    </div>
+
+    <div class="cart">
+        <h3>Keranjang Belanja</h3>
+        <ul id="cart-items">
+            <!-- Items will be added here -->
+        </ul>
+        <p id="total-price" style="color: #ffffff;">Total: Rp0</p> <!-- Menampilkan total harga -->
+    </div>
+
+    <script>
+        const cartItems = [];
+
+        function addToCart(item, price) {
+            cartItems.push({ item, price }); // Menyimpan nama dan harga sebagai sebuah objek
+            updateCart();
+            alert(item + ' telah ditambahkan ke keranjang.');
+        }
+
+        function updateCart() {
+            const cartList = document.getElementById('cart-items');
+            const totalPriceElement = document.getElementById('total-price');
+            cartList.innerHTML = '';
+            let totalPrice = 0; // Inisialisasi total harga
+            cartItems.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.item + " - Rp" + item.price; // Menampilkan nama dan harga
+                cartList.appendChild(li);
+                totalPrice += item.price; // Menambahkan harga item ke total harga
+            });
+            // Menampilkan total harga
+            totalPriceElement.textContent = "Total: Rp" + totalPrice;
+        }
+
+        function checkAge(item) {
+            window.itemToAdd = item; // Simpan item ke variabel global
+            // Tampilkan elemen untuk deteksi usia
+            document.getElementById('age-checker').style.display = 'block';
+        }
+
+        function confirmAge() {
+            // Tambahkan item ke keranjang dengan harga yang sesuai
+            if (window.itemToAdd === 'Rokok') {
+                addToCart(window.itemToAdd, 30000); // Harga rokok
+            } else if (window.itemToAdd === 'Alkohol') {
+                addToCart(window.itemToAdd, 70000); // Harga alkohol
+            }
+
+            // Sembunyikan elemen age-checker setelah proses selesai
+            document.getElementById('age-checker').style.display = 'none';
+        }
+        function reject() {
+            document.getElementById('age-checker').style.display = 'none';
+        }
+
+        // Fungsi untuk menghitung total harga dari semua item di keranjang
+        function calculateTotal() {
+            let totalPrice = 0;
+            cartItems.forEach(item => {
+                totalPrice += item.price;
+            });
+            return totalPrice;
+        }
+
+        // Panggil fungsi updateCart setiap kali terjadi perubahan pada keranjang
+        setInterval(updateCart, 1000); // Menggunakan interval untuk memastikan pembaruan teratur
+    </script>
+</body>
+
+</html>
